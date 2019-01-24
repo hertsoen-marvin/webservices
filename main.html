@@ -4,17 +4,36 @@
     <meta charset="utf-8"></meta>
     <title>mon appli</title>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   <body>
 
     <h1>XPath - JS</h1>
     <hr/>
+
     <h2>Document XML</h2>
     <textarea id="demo" rows="8" cols="80"></textarea>
+
+    <h2>Inspection rapide</h2>
+    <div>Le document traite de <span class="var" id="subject"></span></div>
+    <div>Il contient <span class="var" id="nb_items"></span> <span class="var" id="name_item"></span></div>
+
     <script>
       $(document).ready(function(){
+        const parser = new DOMParser();
+        let   xmldoc = parser.parseFromString("", 'text/xml');
+
+
+
         $("#demo").keyup(function(){
-          console.log($(this).val());
+          xmldoc = parser.parseFromString($(this).val(), 'text/xml');
+          // console.log($(this).val());
+          $("#subject").html(xmldoc.documentElement.tagName);
+          $("#nb_items").html(xmldoc.documentElement.childNodes.length);
+          $("#name_item").html(xmldoc.documentElement.childNodes[1].tagName);
+
+
+          console.log();
         });
       });
     </script>
