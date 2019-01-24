@@ -7,56 +7,59 @@
     <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   <body>
-
     <h1 class="centered">XPath - JS</h1>
-    <hr/>
 
-    <h2>Document XML</h2>
-    <textarea id="demo" rows="8" cols="80"></textarea>
-
-    <h2>Inspection rapide</h2>
-    <div>Le document traite de <span class="var" id="subject"></span></div>
-    <div>Il contient <span class="var" id="nb_items"></span> <span class="var" id="name_item"></span></div>
-
-    <hr/>
-    <h1>Expression XPath</h1>
-    <h2>Expression</h2>
-    <input type="text" id="inp_expression"/>
-
-    <h2>Résultat</h2>
-    <span class="var" id="result">
-
-
-
+    <div class="content">
+      <div class="row">
+        <div class="col">
+          <h2>Document XML</h2>
+          <textarea id="demo" rows="8" style="width:90%"></textarea>
+        </div>
+        <div class="col">
+          <h2>Expression XPath</h2>
+          <input type="text" id="inp_expression"/>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <h2>Inspection rapide</h2>
+          <div>Le document traite de <span class="var" id="subject"></span></div>
+          <div>Il contient <span class="var" id="nb_items"></span> <span class="var" id="name_item"></span></div>
+        </div>
+        <div class="col">
+          <h2>Résultat</h2>
+          <span class="var" id="result">
+        </div>
+      </div>
+    </div>
     <script>
       $(document).ready(function(){
         const parser = new DOMParser();
         let   xmldoc = parser.parseFromString($("#demo").val(), 'text/xml');
-        let   xmlepr = $("#inp_expression").val()
+        let   xmlexpr = $("#inp_expression").val()
+        $("#demo").keyup(function(){ load_xml(); });
+        $("#inp_expression").keyup(function(){ load_expr(); });
 
-
-        $("#demo").keyup(function(){
-          xmldoc = parser.parseFromString($(this).val(), 'text/xml');
+        function load_xml(){
+          xmldoc = parser.parseFromString($("#demo").val(), 'text/xml');
           $("#subject").html(xmldoc.documentElement.tagName);
           $("#nb_items").html(xmldoc.documentElement.childNodes.length);
           $("#name_item").html(xmldoc.documentElement.childNodes[1].tagName);
-        });
 
-        $("#inp_expression").keyup(function(){
-          $("#result").html("");
-          xmlepr = $("#inp_expression").val()
-          xmldoc = parser.parseFromString($("#demo").val(), 'text/xml');
-          nodes = xmldoc.evaluate(xmlepr, xmldoc, null, XPathResult.ANY_TYPE, null);
+        }
 
-          let result = nodes.iterateNext();
-          while(result){
-            $("#result").append(result.textContent +"<br/>")
-            result = nodes.iterateNext();
-           }
-        });
+        function load_expr(){
+            $("#result").html("");
+            xmlexpr = $("#inp_expression").val()
+            xmldoc = parser.parseFromString($("#demo").val(), 'text/xml');
+            nodes = xmldoc.evaluate(xmlexpr, xmldoc, null, XPathResult.ANY_TYPE, null);
 
-
-
+            let result = nodes.iterateNext();
+            while(result){
+              $("#result").append(result.textContent +"<br/>")
+              result = nodes.iterateNext();
+             }
+        }
 
 
       });
